@@ -33,7 +33,7 @@ const main = async ()=>{
     try {
         dir = readdirSync(path.resolve(__dirname, '../backups/'));
         console.log(dir)
-        file =  path.resolve('../backups/'+ dir[1])
+        file =  path.resolve(__dirname,'../backups/'+ dir[1])
       } catch (err) {
         console.error(err);
         return
