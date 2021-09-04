@@ -162,12 +162,24 @@ app.listen(process.env.APP_PORT, async()=>{
         }
     })
     await promiseKill.then(()=>console.log('promiseKill realizada')).catch(err=>console.log(err))
-    try {
-        dir = rmSync(file);
-      } catch (err) {
-        console.error(err);
-        return
-      }
+    
+    const promiseRm = new Promise((resolve, reject)=>{
+        try{
+            resolve(()=>{
+                try {
+                    dir = rmSync(file);
+                  } catch (err) {
+                    console.error(err);
+                    return
+                  }
+            })
+        }catch(err){
+            console.log(err)
+            return
+        }
+    })
+    await promiseRm.then(()=>console.log('promiseRm realizada')).catch(err=>console.log(err))
+    
 }
   
 
