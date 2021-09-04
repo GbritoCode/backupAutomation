@@ -99,7 +99,7 @@ const main = async () => {
 };
 
 const backup = async () => {
-  const proc = spawnSync(bat, [date]);
+  const proc = spawnSync(`bash ${bat}` , [date]);
   console.log('--------------');
   console.log('--------------');
   if (proc.stderr) {
