@@ -148,7 +148,7 @@ app.listen(process.env.APP_PORT, async () => {
       try {
         resolve(() => {
           try {
-            dir = rmSync(file);
+            rmSync(file);
           } catch (err) {
             console.error(err);
             throw 'erro';
