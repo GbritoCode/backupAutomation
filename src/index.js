@@ -135,6 +135,7 @@ app.listen(process.env.APP_PORT, async () => {
       () => console.log('promiseBackup realizada'),
     )
       .catch((err) => {
+          console.log(err)
         throw new Error(err);
       });
     const promiseMain = new Promise((resolve, reject) => {
