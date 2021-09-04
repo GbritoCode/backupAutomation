@@ -16,7 +16,11 @@ var regex = new RegExp('/', 'g');
 
 date = date.replace(regex, '_')
 
- const proc = spawn(bat, [`date`])
+
+let dir
+let file
+
+ const proc = spawn(bat, [date])
 
 const sesConfig = {
   apiVersion: '2019-09-27',
@@ -26,11 +30,9 @@ const sesConfig = {
 };
 
 const main = async ()=>{
-
-    let dir
-    let file
     try {
         dir = readdirSync(path.resolve(__dirname, '../backups/'));
+        console.log(dir)
         file =  path.resolve('../backups/'+ dir[1])
       } catch (err) {
         console.error(err);
