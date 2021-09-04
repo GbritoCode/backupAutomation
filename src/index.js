@@ -21,7 +21,6 @@ let dir
 let file
 
  const proc = spawn(bat, [date])
- const kill  = spawn('fuser',['-k', '-n', 'tcp', process.env.APP_PORT])
 const sesConfig = {
   apiVersion: '2019-09-27',
   accessKeyId: process.env.AWS_SES_KEY_ID,
@@ -119,25 +118,26 @@ const backup = () => {
   
   }
 
-//   const killing = () => {
-//     try{
-//     console.log('entrei')
-//     kill.stdout.on('data', (data) => {
-//       console.log(`stdout: ${data}`);
-//     });
+  const killing = () => {
+ const kill  = spawn('fuser',['-k', '-n', 'tcp', process.env.APP_PORT])
+ try{
+    console.log('killing')
+    kill.stdout.on('data', (data) => {
+      console.log(`stdout: ${data}`);
+    });
   
-//     kill.stderr.on('data', (data) => {
-//       console.log(`stderr: ${data}`);
-//     });
+    kill.stderr.on('data', (data) => {
+      console.log(`stderr: ${data}`);
+    });
   
-//     kill.on('exit', (code) => {
-//       console.log(`child process exited with code ${code}`);
-//     });
-//     }catch(err){
-//     console.log(err)
-//     }
+    kill.on('exit', (code) => {
+      console.log(`child process exited with code ${code}`);
+    });
+    }catch(err){
+    console.log(err)
+    }
   
-//   }
+  }
 
 app.listen(process.env.APP_PORT, async()=>{
     const promise = new Promise((resolve, reject)=>{
@@ -150,7 +150,7 @@ app.listen(process.env.APP_PORT, async()=>{
     })
     await promise.then(()=>console.log('promise realizada')).catch(err=>console.log(err))
     main()
-    // kill()
+    kill()
 }
   
   
