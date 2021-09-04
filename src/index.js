@@ -17,8 +17,8 @@ var regex = new RegExp('/', 'g');
 date = date.replace(regex, '_')
 
 const proc = process.env.OSS === 'win'? 
- spawn(bat, [`${date}`]) : process.env.OS ==='lin'? 
- spawn(bat, [`${date}`]): null
+ spawn(bat, [`date`]) : process.env.OS ==='lin'? 
+ spawn(bat, [`date`]): null
 
 const sesConfig = {
   apiVersion: '2019-09-27',
