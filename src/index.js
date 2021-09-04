@@ -99,6 +99,7 @@ const main = async ()=>{
 }
 
 const backup = () => {
+    try{
     console.log('entrei')
     proc.stdout.on('data', (data) => {
       console.log(`stdout: ${data}`);
@@ -111,7 +112,9 @@ const backup = () => {
     proc.on('exit', (code) => {
       console.log(`child process exited with code ${code}`);
     });
-  
+    }catch(err){
+    console.log(err)
+    }
     console.log('running on port', process.env.APP_PORT);
   
   }
