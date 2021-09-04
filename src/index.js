@@ -98,24 +98,35 @@ const main = async ()=>{
   }
 }
 
+const backup = () => {
+    proc.stdout.on('data', (data) => {
+      console.log(`stdout: ${data}`);
+    });
+  
+    proc.stderr.on('data', (data) => {
+      console.log(`stderr: ${data}`);
+    });
+  
+    proc.on('exit', (code) => {
+      console.log(`child process exited with code ${code}`);
+    });
+  
+    console.log('running on port', process.env.APP_PORT);
+  
+  }
 
+app.listen(process.env.APP_PORT, async()=>{
+    await new Promise((resolve, reject)=>{
+        try{
+            resolve(backup)
+        }catch(err){
+            console.log(err)
+            return
+        }
+    })
+    main()
+}
+  
+  
 
-app.listen(process.env.APP_PORT, () => {
-  proc.stdout.on('data', (data) => {
-    console.log(`stdout: ${data}`);
-  });
-
-  proc.stderr.on('data', (data) => {
-    console.log(`stderr: ${data}`);
-  });
-
-  proc.on('exit', (code) => {
-    console.log(`child process exited with code ${code}`);
-  });
-
-  console.log('running on port', process.env.APP_PORT);
-
-  main()
-
-
-});
+);
