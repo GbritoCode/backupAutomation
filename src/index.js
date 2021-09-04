@@ -102,7 +102,7 @@ const main = async () => {
 const backup = async () => {
   const proc = spawnSync(bat1, [date]);
   console.log('--------------');
-  console.log(proc)
+  console.log(proc.stderr.toString('utf-8'))
   console.log('--------------');
   if (proc.stderr) {
     throw new Error(proc.stderr.toString('utf-8'));
