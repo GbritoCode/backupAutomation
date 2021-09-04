@@ -83,6 +83,12 @@ const main = async () => {
   };
   try {
     const response = await exampleSendEmail();
+    try {
+      rmSync(file);
+    } catch (err) {
+      console.error(err);
+      throw 'erro';
+    }
     console.log(response);
   } catch (err) {
     console.log(err.message);
