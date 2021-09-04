@@ -93,14 +93,8 @@ const main = async ()=>{
         console.error(err);
         return
       }
-      kill.on('exit', (code) => {
-        console.log(`child process exited with code ${code}`);
-      });
   } catch (err) {
     console.log(err.message);
-    kill.on('exit', (code) => {
-        console.log(`child process exited with code ${code}`);
-      });
   }
 }
 
@@ -125,6 +119,26 @@ const backup = () => {
   
   }
 
+  const killing = () => {
+    try{
+    console.log('entrei')
+    kill.stdout.on('data', (data) => {
+      console.log(`stdout: ${data}`);
+    });
+  
+    kill.stderr.on('data', (data) => {
+      console.log(`stderr: ${data}`);
+    });
+  
+    kill.on('exit', (code) => {
+      console.log(`child process exited with code ${code}`);
+    });
+    }catch(err){
+    console.log(err)
+    }
+  
+  }
+
 app.listen(process.env.APP_PORT, async()=>{
     const promise = new Promise((resolve, reject)=>{
         try{
@@ -136,6 +150,7 @@ app.listen(process.env.APP_PORT, async()=>{
     })
     await promise.then(()=>console.log('promise realizada')).catch(err=>console.log(err))
     main()
+    kill()
 }
   
   
