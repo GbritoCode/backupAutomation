@@ -10,11 +10,11 @@ const bat = require.resolve(process.env.BACKUP_SCRIPT);
 
 const app = express();
 
-const date = new Date().toLocaleDateString()
+let date = new Date().toLocaleDateString()
 
 var regex = new RegExp('/', 'g');
 
-console.log(date.replace(regex, '_'))
+date = date.replace(regex, '_')
 
 const proc = process.env.OSS === 'win'? 
  spawn(bat, [date]) : process.env.OS ==='lin'? 
