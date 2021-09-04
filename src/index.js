@@ -94,17 +94,13 @@ const main = async ()=>{
 
 const backup = async () => {
     
-    console.log('entrei')
- const proc = spawnSync (bat, [date])
- 
- proc.stdout.on('data', (data) => {
-      console.log(`stdout: ${data}`);
-    });
+    const proc = spawnSync(bat, [date])
+console.log('--------------')
+     console.log(proc.stdout.toString("utf-8"))
+     console.log(proc.stderr.toString("utf-8"))
+console.log('--------------')
   
-    proc.stderr.on('data', (data) => {
-      console.log(`stderr: ${data}`);
-      throw 'erro'
-    });
+   
   
     proc.on('exit', (code) => {
       console.log(`child process exited with code ${code}`);
