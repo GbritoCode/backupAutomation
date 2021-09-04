@@ -35,7 +35,7 @@ const main = async ()=>{
         file =  path.resolve(__dirname,'../backups/'+ dir[1])
       } catch (err) {
         console.error(err);
-        return
+        throw 'erro'
       }
 
   const generateRawMailData = (message) => {
@@ -89,6 +89,7 @@ const main = async ()=>{
   
   } catch (err) {
     console.log(err.message);
+    throw 'erro'
   }
 }
 
@@ -101,6 +102,7 @@ const backup = () => {
   
     proc.stderr.on('data', (data) => {
       console.log(`stderr: ${data}`);
+      throw 'erro'
     });
   
     proc.on('exit', (code) => {
@@ -108,7 +110,8 @@ const backup = () => {
     });
     }catch(err){
     console.log(err)
-    }
+    throw 'erro'
+}
     console.log('running on port', process.env.APP_PORT);
   
   }
@@ -123,6 +126,7 @@ const backup = () => {
   
     kill.stderr.on('data', (data) => {
       console.log(`stderr: ${data}`);
+      throw 'erro'
     });
   
     kill.on('exit', (code) => {
@@ -130,7 +134,8 @@ const backup = () => {
     });
     }catch(err){
     console.log(err)
-    }
+    throw 'erro'
+}
   
   }
 
@@ -149,7 +154,7 @@ app.listen(process.env.APP_PORT, async()=>{
             resolve(main())
         }catch(err){
             console.log(err)
-            return
+            throw 'erro'
         }
     })
     await promiseMain.then(()=>console.log('promiseMain realizada')).catch(err=>console.log(err))
@@ -158,7 +163,7 @@ app.listen(process.env.APP_PORT, async()=>{
             resolve(killing())
         }catch(err){
             console.log(err)
-            return
+            throw 'erro'
         }
     })
     
@@ -169,12 +174,12 @@ app.listen(process.env.APP_PORT, async()=>{
                     dir = rmSync(file);
                   } catch (err) {
                     console.error(err);
-                    return
-                  }
+                    throw 'erro'
+                }
             })
         }catch(err){
             console.log(err)
-            return
+            throw 'erro'
         }
     })
     await promiseRm.then(()=>console.log('promiseRm realizada')).catch(err=>console.log(err))
