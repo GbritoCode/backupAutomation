@@ -2,7 +2,7 @@ require('dotenv/config');
 const MailComposer = require('nodemailer/lib/mail-composer');
 const AWS = require('aws-sdk');
 const express = require('express');
-const { execSync } = require('child_process');
+const { spawnSync } = require('child_process');
 const { readdirSync, rmSync } = require('fs');
 const path = require('path');
 
@@ -20,7 +20,6 @@ date = date.replace(regex, '_')
 let dir
 let file
 
- const proc = execSync (bat, [date])
 const sesConfig = {
   apiVersion: '2019-09-27',
   accessKeyId: process.env.AWS_SES_KEY_ID,
@@ -96,7 +95,9 @@ const main = async ()=>{
 const backup = async () => {
     
     console.log('entrei')
-    proc.stdout.on('data', (data) => {
+ const proc = spawnSync (bat, [date])
+ 
+ proc.stdout.on('data', (data) => {
       console.log(`stdout: ${data}`);
     });
   
@@ -114,7 +115,7 @@ const backup = async () => {
   }
 
   const killing = () => {
- const kill  = execSync('fuser',['-k', '-n', 'tcp', process.env.APP_PORT])
+ const kill  = spawnSync('fuser',['-k', '-n', 'tcp', process.env.APP_PORT])
  try{
     console.log('killing')
     kill.stdout.on('data', (data) => {
