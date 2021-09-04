@@ -100,7 +100,7 @@ const main = async () => {
 };
 
 const backup = async () => {
-  const proc = spawnSync(bat1, [date]);
+  const proc = spawnSync(bat, [date]);
   console.log('--------------');
   console.log(proc.output.toString('utf-8'))
   console.log(proc.stdout.toString('utf-8'))
