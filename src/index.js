@@ -150,9 +150,8 @@ app.listen(process.env.APP_PORT, async()=>{
     })
     await promise.then(()=>console.log('promise realizada')).catch(err=>console.log(err))
     main()
-    kill()
+    killing()
 }
-  
   
 
 );
