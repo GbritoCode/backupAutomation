@@ -10,15 +10,14 @@ const bat = require.resolve(process.env.BACKUP_SCRIPT);
 
 const app = express();
 
-let date = new Date().toLocaleDateString()
+let date = new Date().toLocaleDateString();
 
-var regex = new RegExp('/', 'g');
+const regex = new RegExp('/', 'g');
 
-date = date.replace(regex, '_')
+date = date.replace(regex, '_');
 
-
-let dir
-let file
+let dir;
+let file;
 
 const sesConfig = {
   apiVersion: '2019-09-27',
@@ -27,15 +26,15 @@ const sesConfig = {
   region: process.env.AWS_SES_REGION,
 };
 
-const main = async ()=>{
-    try {
-        dir = readdirSync(path.resolve(__dirname, '../backups/'));
-        console.log(dir)
-        file =  path.resolve(__dirname,'../backups/'+ dir[1])
-      } catch (err) {
-        console.error(err);
-        throw 'erro'
-      }
+const main = async () => {
+  try {
+    dir = readdirSync(path.resolve(__dirname, '../backups/'));
+    console.log(dir);
+    file = path.resolve(__dirname, `../backups/${dir[1]}`);
+  } catch (err) {
+    console.error(err);
+    throw 'erro';
+  }
 
   const generateRawMailData = (message) => {
     const mailOptions = {
@@ -46,7 +45,7 @@ const main = async ()=>{
       subject: message.subject,
       text: message.bodyTxt,
       html: message.bodyHtml,
-      attachments: { filename:message.attachments.name, path: message.attachments.data, encoding: 'base64' }
+      attachments: { filename: message.attachments.name, path: message.attachments.data, encoding: 'base64' },
     };
     return new MailComposer(mailOptions).compile().build();
   };
@@ -67,7 +66,7 @@ const main = async ()=>{
       attachments: {
         name: `backup_${date}`,
         data: file,
-      }
+      },
     };
     const ses = new AWS.SESV2(sesConfig);
     const params = {
@@ -85,103 +84,104 @@ const main = async ()=>{
   try {
     const response = await exampleSendEmail();
     console.log(response);
-  
   } catch (err) {
     console.log(err.message);
-    throw 'erro'
+    throw 'erro';
   }
-}
+};
 
 const backup = async () => {
-    
-    const proc = spawnSync(bat, [date])
-console.log('--------------')
-     console.log(proc.stdout.toString("utf-8"))
-     console.log(proc.stderr.toString("utf-8"))
-     console.log(!!proc.stderr.toString("utf-8"))
-console.log('--------------')
-  
-   
-  
-    proc.on('exit', (code) => {
-      console.log(`child process exited with code ${code}`);
-    });
-    
-    
-  
+  const proc = spawnSync(bat, [date]);
+  console.log('--------------');
+  console.log(proc.stdout.toString('utf-8'));
+  console.log(proc.stderr.toString('utf-8'));
+  console.log(!!proc.stderr);
+  console.log('--------------');
+  if (proc.stderr.toString('utf-8')) {
+    throw new Error(proc.stderr.toString('utf-8'));
   }
+};
 
-  const killing = () => {
- const kill  = spawnSync('fuser',['-k', '-n', 'tcp', process.env.APP_PORT])
- try{
-    console.log('killing')
-    kill.stdout.on('data', (data) => {
-      console.log(`stdout: ${data}`);
-    });
-  
-    kill.stderr.on('data', (data) => {
-      console.log(`stderr: ${data}`);
-      throw 'erro'
-    });
-  
-    kill.on('exit', (code) => {
-      console.log(`child process exited with code ${code}`);
-    });
-    }catch(err){
-    console.log(err)
-    throw 'erro'
-}
-  
+const killing = () => {
+  const kill = spawnSync('fuser', ['-k', '-n', 'tcp', process.env.APP_PORT]);
+  console.log('killing');
+  console.log('--------------');
+  console.log(kill.stdout.toString('utf-8'));
+  console.log(kill.stderr.toString('utf-8'));
+  console.log(!!kill.stderr);
+  console.log('--------------');
+  if (kill.stderr.toString('utf-8')) {
+    throw new Error(kill.stderr.toString('utf-8'));
   }
+};
 
-app.listen(process.env.APP_PORT, async()=>{
-    const promiseBackup = new Promise((resolve, reject)=>{
-        try{
-            resolve(backup())
-        }catch(err){
-            console.log(err)
-            return
-        }
-    })
-    await promiseBackup.then(()=>console.log('promiseBackup realizada')).catch(err=>console.log(err))
-    
-    const promiseMain = new Promise((resolve, reject)=>{
-        try{
-            resolve(main())
-        }catch(err){
-            console.log(err)
-            throw 'erro'
-        }
-    })
-    await promiseMain.then(()=>console.log('promiseMain realizada')).catch(err=>console.log(err))
-    const promiseKill = new Promise((resolve, reject)=>{
-        try{
-            resolve(killing())
-        }catch(err){
-            console.log(err)
-            throw 'erro'
-        }
-    })
-    
-    const promiseRm = new Promise((resolve, reject)=>{
-        try{
-            resolve(()=>{
-                try {
-                    dir = rmSync(file);
-                  } catch (err) {
-                    console.error(err);
-                    throw 'erro'
-                }
-            })
-        }catch(err){
-            console.log(err)
-            throw 'erro'
-        }
-    })
-    await promiseRm.then(()=>console.log('promiseRm realizada')).catch(err=>console.log(err))
-    
-    await promiseKill.then(()=>console.log('promiseKill realizada')).catch(err=>console.log(err))
-}
-  
+app.listen(process.env.APP_PORT, async () => {
+  try {
+    const promiseBackup = new Promise((resolve, reject) => {
+      try {
+        resolve(backup());
+      } catch (err) {
+        console.log('asdasd');
+      }
+    });
+    await promiseBackup.then(
+      () => console.log('promiseBackup realizada'),
+    )
+      .catch((err) => {
+        throw new Error(err);
+      });
+    const promiseMain = new Promise((resolve, reject) => {
+      try {
+        resolve(main());
+      } catch (err) {
+        console.log(err);
+        throw 'erro';
+      }
+    });
 
-);
+    await promiseMain.then(
+      () => console.log('promiseMain realizada'),
+    )
+      .catch((err) => { throw new Error(err); });
+
+    const promiseRm = new Promise((resolve, reject) => {
+      try {
+        resolve(() => {
+          try {
+            dir = rmSync(file);
+          } catch (err) {
+            console.error(err);
+            throw 'erro';
+          }
+        });
+      } catch (err) {
+        console.log(err);
+        throw 'erro';
+      }
+    });
+    await promiseRm.then(
+      () => console.log('promiseRm realizada'),
+    )
+      .catch((err) => {
+        throw new Error(err);
+      });
+
+    const promiseKill = new Promise((resolve, reject) => {
+      try {
+        resolve(killing());
+      } catch (err) {
+        console.log(err);
+        throw 'erro';
+      }
+    });
+
+    await promiseKill.then(
+      () => console.log('promiseKill realizada'),
+    )
+      .catch((err) => {
+        throw new Error(err);
+      });
+  } catch (err) {
+    console.log(err);
+  }
+});
