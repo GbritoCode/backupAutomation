@@ -32,7 +32,7 @@ const main = async ()=>{
     let dir
     let file
     try {
-        dir = readdirSync('../backups');
+        dir = readdirSync('../backups/');
         file =  path.resolve('../backups/'+ dir[1])
       } catch (err) {
         console.error(err);
@@ -99,6 +99,7 @@ const main = async ()=>{
 }
 
 const backup = () => {
+    console.log('entrei')
     proc.stdout.on('data', (data) => {
       console.log(`stdout: ${data}`);
     });
@@ -116,14 +117,15 @@ const backup = () => {
   }
 
 app.listen(process.env.APP_PORT, async()=>{
-    await new Promise((resolve, reject)=>{
+    const promise = new Promise((resolve, reject)=>{
         try{
-            resolve(backup)
+            resolve(backup())
         }catch(err){
             console.log(err)
             return
         }
     })
+    await promise.then(()=>console.log('promise realizada')).catch(err=>console.log(err))
     main()
 }
   
