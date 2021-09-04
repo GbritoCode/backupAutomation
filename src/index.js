@@ -16,7 +16,7 @@ var regex = new RegExp('/', 'g');
 
 date = date.replace(regex, '_')
 
- spawn(bat, [`date`])
+ const proc = spawn(bat, [`date`])
 
 const sesConfig = {
   apiVersion: '2019-09-27',
