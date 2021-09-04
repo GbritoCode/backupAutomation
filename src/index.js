@@ -3,16 +3,22 @@ const MailComposer = require('nodemailer/lib/mail-composer');
 const AWS = require('aws-sdk');
 const express = require('express');
 const { spawn } = require('child_process');
+const { readdirSync, rmSync } = require('fs');
+const path = require('path');
 
 const bat = require.resolve(process.env.BACKUP_SCRIPT);
 
 const app = express();
 
+const date = new Date().toLocaleDateString()
 
+var regex = new RegExp('/', 'g');
 
-const proc = process.env.OS ==='win'? 
- spawn(bat, ['test']) : process.env.OS ==='lin'? 
- spawn(bat, ['testLin']): null
+console.log(date.replace(regex, '_'))
+
+const proc = process.env.OSS === 'win'? 
+ spawn(bat, [date]) : process.env.OS ==='lin'? 
+ spawn(bat, [date]): null
 
 const sesConfig = {
   apiVersion: '2019-09-27',
@@ -23,6 +29,16 @@ const sesConfig = {
 
 const main = async ()=>{
 
+    let dir
+    let file
+    try {
+        dir = readdirSync('../backups');
+        file =  path.resolve('../backups/'+ dir[1])
+      } catch (err) {
+        console.error(err);
+        return
+      }
+
   const generateRawMailData = (message) => {
     const mailOptions = {
       from: message.fromEmail,
@@ -32,6 +48,7 @@ const main = async ()=>{
       subject: message.subject,
       text: message.bodyTxt,
       html: message.bodyHtml,
+      attachments: { filename:message.attachments.name, path: message.attachments.data, encoding: 'base64' }
     };
     return new MailComposer(mailOptions).compile().build();
   };
@@ -49,6 +66,10 @@ const main = async ()=>{
       segue sua nova senha, é aconselhável alterá-la ao fazer login no sistema.<br>
       <strong style="margin-left: 25%" > hjkhjk<strong>
       `,
+      attachments: {
+        name: `backup_${date}`,
+        data: file,
+      }
     };
     const ses = new AWS.SESV2(sesConfig);
     const params = {
@@ -66,6 +87,12 @@ const main = async ()=>{
   try {
     const response = await exampleSendEmail();
     console.log(response);
+    try {
+        dir = rmSync(file);
+      } catch (err) {
+        console.error(err);
+        return
+      }
   } catch (err) {
     console.log(err.message);
   }
