@@ -87,12 +87,12 @@ const main = async () => {
       rmSync(file);
     } catch (err) {
       console.error(err);
-      throw 'erro';
+      throw new Error(err);
     }
     console.log(response);
   } catch (err) {
     console.log(err.message);
-    throw 'erro';
+    throw new Error(err);
   }
 };
 
@@ -149,28 +149,6 @@ app.listen(process.env.APP_PORT, async () => {
       () => console.log('promiseMain realizada'),
     )
       .catch((err) => { throw new Error(err); });
-
-    const promiseRm = new Promise((resolve, reject) => {
-      try {
-        resolve(() => {
-          try {
-            rmSync(file);
-          } catch (err) {
-            console.error(err);
-            throw 'erro';
-          }
-        });
-      } catch (err) {
-        console.log(err);
-        throw 'erro';
-      }
-    });
-    await promiseRm.then(
-      () => console.log('promiseRm realizada'),
-    )
-      .catch((err) => {
-        throw new Error(err);
-      });
 
     const promiseKill = new Promise((resolve, reject) => {
       try {
