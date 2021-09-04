@@ -86,12 +86,7 @@ const main = async ()=>{
   try {
     const response = await exampleSendEmail();
     console.log(response);
-    try {
-        dir = rmSync(file);
-      } catch (err) {
-        console.error(err);
-        return
-      }
+  
   } catch (err) {
     console.log(err.message);
   }
@@ -167,6 +162,12 @@ app.listen(process.env.APP_PORT, async()=>{
         }
     })
     await promiseKill.then(()=>console.log('promiseKill realizada')).catch(err=>console.log(err))
+    try {
+        dir = rmSync(file);
+      } catch (err) {
+        console.error(err);
+        return
+      }
 }
   
 
