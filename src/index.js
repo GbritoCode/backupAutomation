@@ -6,7 +6,7 @@ const { spawnSync } = require('child_process');
 const { readdirSync, rmSync } = require('fs');
 const path = require('path');
 
-const bat = require.resolve(process.env.BACKUP_SCRIPT);
+const bat = require(process.env.BACKUP_SCRIPT);
 
 const app = express();
 
