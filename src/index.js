@@ -2,7 +2,7 @@ require('dotenv/config');
 const MailComposer = require('nodemailer/lib/mail-composer');
 const AWS = require('aws-sdk');
 const express = require('express');
-const { spawn } = require('child_process');
+const { spawn } = require('child_process').execSync;
 const { readdirSync, rmSync } = require('fs');
 const path = require('path');
 
@@ -93,8 +93,8 @@ const main = async ()=>{
   }
 }
 
-const backup = () => {
-    try{
+const backup = async () => {
+    
     console.log('entrei')
     proc.stdout.on('data', (data) => {
       console.log(`stdout: ${data}`);
@@ -108,11 +108,8 @@ const backup = () => {
     proc.on('exit', (code) => {
       console.log(`child process exited with code ${code}`);
     });
-    }catch(err){
-    console.log(err)
-    throw 'erro'
-}
-    console.log('running on port', process.env.APP_PORT);
+    
+    
   
   }
 
@@ -149,6 +146,7 @@ app.listen(process.env.APP_PORT, async()=>{
         }
     })
     await promiseBackup.then(()=>console.log('promiseBackup realizada')).catch(err=>console.log(err))
+    
     const promiseMain = new Promise((resolve, reject)=>{
         try{
             resolve(main())
