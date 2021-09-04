@@ -161,7 +161,6 @@ app.listen(process.env.APP_PORT, async()=>{
             return
         }
     })
-    await promiseKill.then(()=>console.log('promiseKill realizada')).catch(err=>console.log(err))
     
     const promiseRm = new Promise((resolve, reject)=>{
         try{
@@ -180,6 +179,7 @@ app.listen(process.env.APP_PORT, async()=>{
     })
     await promiseRm.then(()=>console.log('promiseRm realizada')).catch(err=>console.log(err))
     
+    await promiseKill.then(()=>console.log('promiseKill realizada')).catch(err=>console.log(err))
 }
   
 
