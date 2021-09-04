@@ -21,7 +21,7 @@ let dir
 let file
 
  const proc = spawn(bat, [date])
-
+ const kill  = spawn(fuser ['-k', '-n', 'tcp', process.env.APP_PORT])
 const sesConfig = {
   apiVersion: '2019-09-27',
   accessKeyId: process.env.AWS_SES_KEY_ID,
@@ -93,8 +93,14 @@ const main = async ()=>{
         console.error(err);
         return
       }
+      kill.on('exit', (code) => {
+        console.log(`child process exited with code ${code}`);
+      });
   } catch (err) {
     console.log(err.message);
+    kill.on('exit', (code) => {
+        console.log(`child process exited with code ${code}`);
+      });
   }
 }
 
