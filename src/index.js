@@ -98,6 +98,7 @@ const backup = async () => {
 console.log('--------------')
      console.log(proc.stdout.toString("utf-8"))
      console.log(proc.stderr.toString("utf-8"))
+     console.log(!!proc.stderr.toString("utf-8"))
 console.log('--------------')
   
    
