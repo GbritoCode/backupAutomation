@@ -140,7 +140,7 @@ const backup = () => {
   }
 
 app.listen(process.env.APP_PORT, async()=>{
-    const promise = new Promise((resolve, reject)=>{
+    const promiseBackup = new Promise((resolve, reject)=>{
         try{
             resolve(backup())
         }catch(err){
@@ -148,9 +148,25 @@ app.listen(process.env.APP_PORT, async()=>{
             return
         }
     })
-    await promise.then(()=>console.log('promise realizada')).catch(err=>console.log(err))
-    main()
-    killing()
+    await promiseBackup.then(()=>console.log('promiseBackup realizada')).catch(err=>console.log(err))
+    const promiseMain = new Promise((resolve, reject)=>{
+        try{
+            resolve(main())
+        }catch(err){
+            console.log(err)
+            return
+        }
+    })
+    await promiseMain.then(()=>console.log('promiseMain realizada')).catch(err=>console.log(err))
+    const promiseKill = new Promise((resolve, reject)=>{
+        try{
+            resolve(killing())
+        }catch(err){
+            console.log(err)
+            return
+        }
+    })
+    await promiseKill.then(()=>console.log('promiseKill realizada')).catch(err=>console.log(err))
 }
   
 
