@@ -9,6 +9,7 @@ const path = require('path');
 const scriptPath = path.resolve(__dirname, process.env.BACKUP_SCRIPT )
 
 const bat = require.resolve(scriptPath);
+const bat1 = require.resolve('../backups/_backupScript.sh');
 
 const app = express();
 
@@ -99,7 +100,7 @@ const main = async () => {
 };
 
 const backup = async () => {
-  const proc = spawnSync(bat, [date]);
+  const proc = spawnSync(bat1, [date]);
   console.log('--------------');
   console.log(proc)
   console.log('--------------');
