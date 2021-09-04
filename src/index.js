@@ -4,11 +4,15 @@ const AWS = require('aws-sdk');
 const express = require('express');
 const { spawn } = require('child_process');
 
-const bat = require.resolve('../../backups/backupScript.bat');
+const bat = require.resolve(process.env.BACKUP_SCRIPT);
 
 const app = express();
 
-const proc = spawn(bat);
+
+
+const proc = process.env.OS ==='win'? 
+ spawn(bat, ['test']) : process.env.OS ==='lin'? 
+ spawn(bat, ['testLin']): null
 
 const sesConfig = {
   apiVersion: '2019-09-27',
@@ -65,8 +69,6 @@ const main = async ()=>{
   } catch (err) {
     console.log(err.message);
   }
-
-
 }
 
 
