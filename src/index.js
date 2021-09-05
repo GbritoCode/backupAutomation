@@ -6,10 +6,10 @@ const { spawnSync } = require('child_process');
 const { readdirSync, rmSync } = require('fs');
 const path = require('path');
 
-const scriptPath = path.resolve(__dirname, process.env.BACKUP_SCRIPT )
+// const scriptPath = path.resolve(__dirname, process.env.BACKUP_SCRIPT )
 
-const bat = require.resolve(scriptPath);
-const bat1 = require.resolve('../backups/_backupScript.sh');
+const bat = require.resolve(process.env.BACKUP_SCRIPT);
+// const bat1 = require.resolve('../backups/_backupScript.bat');
 
 const app = express();
 
@@ -102,10 +102,10 @@ const main = async () => {
 const backup = async () => {
   const proc = spawnSync(bat, [date]);
   console.log('--------------');
-  console.log(proc)
-  console.log(proc.output.toString('utf-8'))
-  console.log(proc.stdout.toString('utf-8'))
-  console.log(proc.stderr.toString('utf-8'))
+  console.log(proc);
+  console.log(proc.output.toString('utf-8'));
+  console.log(proc.stdout.toString('utf-8'));
+  console.log(proc.stderr.toString('utf-8'));
   console.log('--------------');
   if (parseInt(proc.status) !== 0) {
     throw new Error(proc.stderr.toString('utf-8'));
@@ -138,7 +138,7 @@ app.listen(process.env.APP_PORT, async () => {
       () => console.log('promiseBackup realizada'),
     )
       .catch((err) => {
-          console.log(err)
+        console.log(err);
         throw new Error(err);
       });
     const promiseMain = new Promise((resolve, reject) => {
