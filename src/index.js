@@ -81,13 +81,14 @@ const main = async () => {
       FromEmailAddress: message.fromEmail,
       ReplyToAddresses: message.replyTo,
     };
-    console.log(params.Content.Raw.Data.toString('utf-8'));
     return ses.sendEmail(params).promise();
   };
   try {
     const response = await exampleSendEmail();
     try {
-      rmSync(file);
+      file.forEach((arr) => {
+        rmSync(arr.data);
+      });
     } catch (err) {
       throw new Error(err);
     }
