@@ -84,19 +84,19 @@ const main = async () => {
   //     };
   //     return ses.sendEmail(params).promise();
   //   };
+  //   try {
+  // const response = await exampleSendEmail();
   try {
-    // const response = await exampleSendEmail();
-    try {
-      rmSync(file);
-    } catch (err) {
-      console.error(err);
-      throw new Error(err);
-    }
-    // console.log(response);
+    rmSync(file);
   } catch (err) {
-    console.log(err.message);
+    console.error(err);
     throw new Error(err);
   }
+  // console.log(response);
+//   } catch (err) {
+//     console.log(err.message);
+//     throw new Error(err);
+//   }
 };
 
 const backup = async () => {
