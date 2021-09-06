@@ -58,7 +58,7 @@ const main = async () => {
   const exampleSendEmail = async () => {
     const message = {
       fromEmail: 'suporte@tovoit.com.br',
-      to: ['gabrielcabeca26@gmail.com'],
+      to: process.env.TO_EMAILS,
       cc: [],
       bcc: [],
       subject: 'Alteração de senha',
