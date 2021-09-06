@@ -1,11 +1,12 @@
-require('dotenv').config({ path: '~/backupAutomation/.env' });
 const MailComposer = require('nodemailer/lib/mail-composer');
 const AWS = require('aws-sdk');
 const express = require('express');
 const { spawnSync } = require('child_process');
 const { readdirSync, rmSync } = require('fs');
 const path = require('path');
+const teste = require('./test');
 
+require('dotenv').config({ path: teste.path });
 // const scriptPath = path.resolve(__dirname, process.env.BACKUP_SCRIPT )
 
 const bat = require.resolve(process.env.BACKUP_SCRIPT);
