@@ -33,7 +33,11 @@ const main = async () => {
   try {
     dir = readdirSync(path.resolve(__dirname, '../backups/'));
     dir = dir.filter((arr) => arr !== scriptName);
-
+    console.log(dir);
+    console.log(dir.map((arr) => ({
+        name: `${arr}`,
+        data: path.resolve(__dirname, `../backups/${arr}`),
+      })););
     file = dir.map((arr) => ({
       name: `${arr}`,
       data: path.resolve(__dirname, `../backups/${arr}`),
