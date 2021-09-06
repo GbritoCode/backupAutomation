@@ -100,7 +100,7 @@ const main = async () => {
 };
 
 const backup = async () => {
-  const proc = spawnSync(bat, [date]);
+  const proc = spawnSync('/home/deploy/backupAutomation/backups/_backupScript.sh', [date]);
   console.log('--------------');
   console.log(proc);
   console.log(proc.output.toString('utf-8'));
