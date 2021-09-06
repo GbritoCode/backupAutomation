@@ -61,13 +61,9 @@ const main = async () => {
       to: process.env.TO_EMAILS.split(','),
       cc: [],
       bcc: [],
-      subject: 'Alteração de senha',
+      subject: 'Backups digitalOcean',
       bodyTxt: '',
-      bodyHtml: `Olá <strong>hjkh</strong> <br> Foi solicitado uma alteração de senha para o seu usuário no aplicativo Tovo,<br>
-        caso essa alteração não tenha sido solicitada por você, altere sua senha e entre em contato com o admnistrador<br>
-        segue sua nova senha, é aconselhável alterá-la ao fazer login no sistema.<br>
-        <strong style="margin-left: 25%" > hjkhjk<strong>
-        `,
+      bodyHtml: `Segue OS backups referentes ao dia ${new Date().toLocaleString('pt-br')}`,
       attachments: file,
     };
     const ses = new AWS.SESV2(sesConfig);
