@@ -1,4 +1,4 @@
-require('dotenv/config');
+require('dotenv').config({ path: '~/backupAutomation/.env' });
 const MailComposer = require('nodemailer/lib/mail-composer');
 const AWS = require('aws-sdk');
 const express = require('express');

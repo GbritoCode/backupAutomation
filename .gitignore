@@ -1,4 +1,4 @@
 node_modules
 .env
-backups/_backupScript.bat
+backups/*
 backups/_backupScript.sh
