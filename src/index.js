@@ -49,8 +49,10 @@ const main = async () => {
       subject: message.subject,
       text: message.bodyTxt,
       html: message.bodyHtml,
-      attachments: file.map((f) => ({ filename: f.name, path: f.data, encoding: 'base64' })),
+      attachments: message.attachments.map((f) => ({ filename: f.name, path: f.data, encoding: 'base64' })),
     };
+    console.log(message.attachments.map((f) => ({ filename: f.name, path: f.data, encoding: 'base64' })));
+
     return new MailComposer(mailOptions).compile().build();
   };
 
@@ -67,7 +69,7 @@ const main = async () => {
         segue sua nova senha, é aconselhável alterá-la ao fazer login no sistema.<br>
         <strong style="margin-left: 25%" > hjkhjk<strong>
         `,
-      attachments: file.map((f) => ({ filename: f.name, path: f.data, encoding: 'base64' })),
+      attachments: file,
     };
     const ses = new AWS.SESV2(sesConfig);
     const params = {
