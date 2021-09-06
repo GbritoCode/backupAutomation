@@ -6,7 +6,6 @@ const { readdirSync, rmSync } = require('fs');
 const path = require('path');
 const test = require('./test');
 
-console.log(test);
 require('dotenv').config({ path: test.envPath });
 
 const bat = require.resolve(process.env.BACKUP_SCRIPT);
@@ -33,11 +32,6 @@ const main = async () => {
   try {
     dir = readdirSync(path.resolve(__dirname, '../backups/'));
     dir = dir.filter((arr) => arr !== scriptName);
-    console.log(dir);
-    console.log(dir.filter((arr) => arr !== scriptName).map((arr) => ({
-      name: `${arr}`,
-      data: path.resolve(__dirname, `../backups/${arr}`),
-    })));
     file = dir.filter((arr) => arr !== scriptName).map((arr) => ({
       name: `${arr}`,
       data: path.resolve(__dirname, `../backups/${arr}`),
@@ -75,6 +69,7 @@ const main = async () => {
         `,
       attachments: file,
     };
+    console.log(message.attachments.map((f) => ({ filename: f.name, path: f.data, encoding: 'base64' })));
     const ses = new AWS.SESV2(sesConfig);
     const params = {
       Content: { Raw: { Data: await generateRawMailData(message) } },
