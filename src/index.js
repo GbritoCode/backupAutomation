@@ -51,7 +51,6 @@ const main = async () => {
       html: message.bodyHtml,
       attachments: message.attachments.map((f) => ({ filename: f.name, path: f.data, encoding: 'base64' })),
     };
-    console.log(new MailComposer(mailOptions).compile().build());
 
     return new MailComposer(mailOptions).compile().build();
   };
@@ -82,6 +81,7 @@ const main = async () => {
       FromEmailAddress: message.fromEmail,
       ReplyToAddresses: message.replyTo,
     };
+    console.log(params);
     return ses.sendEmail(params).promise();
   };
   try {
