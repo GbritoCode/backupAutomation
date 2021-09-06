@@ -4,13 +4,12 @@ const express = require('express');
 const { spawnSync } = require('child_process');
 const { readdirSync, rmSync } = require('fs');
 const path = require('path');
-const teste = require('./test');
+const test = require('./test');
 
-require('dotenv').config({ path: teste.path });
-// const scriptPath = path.resolve(__dirname, process.env.BACKUP_SCRIPT )
+console.log(test);
+require('dotenv').config({ path: test.envPath });
 
 const bat = require.resolve(process.env.BACKUP_SCRIPT);
-// const bat1 = require.resolve('../backups/_backupScript.bat');
 
 const app = express();
 
@@ -20,9 +19,9 @@ const regex = new RegExp('/', 'g');
 
 date = date.replace(regex, '_');
 
-let dir;
-let file;
-
+let dir; let
+  file;
+const scriptName = process.env.OSS === 'win' ? '_backupScript.bat' : '_backupScript.sh';
 const sesConfig = {
   apiVersion: '2019-09-27',
   accessKeyId: process.env.AWS_SES_KEY_ID,
@@ -33,11 +32,14 @@ const sesConfig = {
 const main = async () => {
   try {
     dir = readdirSync(path.resolve(__dirname, '../backups/'));
-    console.log(dir);
-    file = path.resolve(__dirname, `../backups/${dir[1]}`);
+    dir = dir.filter((arr) => arr !== scriptName);
+
+    file = dir.map((arr) => ({
+      name: `${arr}`,
+      data: path.resolve(__dirname, `../backups/${arr}`),
+    }));
   } catch (err) {
-    console.error(err);
-    throw 'erro';
+    throw new Error(err);
   }
 
   const generateRawMailData = (message) => {
@@ -49,7 +51,7 @@ const main = async () => {
       subject: message.subject,
       text: message.bodyTxt,
       html: message.bodyHtml,
-      attachments: { filename: message.attachments.name, path: message.attachments.data, encoding: 'base64' },
+      attachments: message.attachments.map((f) => ({ filename: f.name, path: f.data, encoding: 'base64' })),
     };
     return new MailComposer(mailOptions).compile().build();
   };
@@ -67,10 +69,7 @@ const main = async () => {
         segue sua nova senha, é aconselhável alterá-la ao fazer login no sistema.<br>
         <strong style="margin-left: 25%" > hjkhjk<strong>
         `,
-      attachments: {
-        name: `backup_${date}`,
-        data: file,
-      },
+      attachments: file,
     };
     const ses = new AWS.SESV2(sesConfig);
     const params = {
@@ -90,25 +89,18 @@ const main = async () => {
     try {
       rmSync(file);
     } catch (err) {
-      console.error(err);
       throw new Error(err);
     }
     console.log(response);
   } catch (err) {
-    console.log(err.message);
     throw new Error(err);
   }
 };
 
 const backup = async () => {
   const proc = spawnSync(bat, [date]);
-  console.log('--------------');
-  console.log(proc);
-  console.log(proc.output.toString('utf-8'));
-  console.log(proc.stdout.toString('utf-8'));
-  console.log(proc.stderr.toString('utf-8'));
-  console.log('--------------');
-  if (parseInt(proc.status) !== 0) {
+  console.log('backup');
+  if (parseInt(proc.status, 10) !== 0) {
     throw new Error(proc.stderr.toString('utf-8'));
   }
 };
@@ -116,11 +108,6 @@ const backup = async () => {
 const killing = () => {
   const kill = spawnSync('fuser', ['-k', '-n', 'tcp', process.env.APP_PORT]);
   console.log('killing');
-  console.log('--------------');
-  console.log(kill.stdout.toString('utf-8'));
-  console.log(kill.stderr.toString('utf-8'));
-  console.log(!!kill.stderr);
-  console.log('--------------');
   if (kill.stderr.toString('utf-8')) {
     throw new Error(kill.stderr.toString('utf-8'));
   }
@@ -128,26 +115,24 @@ const killing = () => {
 
 app.listen(process.env.APP_PORT, async () => {
   try {
-    const promiseBackup = new Promise((resolve, reject) => {
+    const promiseBackup = new Promise((resolve) => {
       try {
         resolve(backup());
       } catch (err) {
-        console.log('asdasd');
+        throw new Error(err);
       }
     });
     await promiseBackup.then(
       () => console.log('promiseBackup realizada'),
     )
       .catch((err) => {
-        console.log(err);
         throw new Error(err);
       });
-    const promiseMain = new Promise((resolve, reject) => {
+    const promiseMain = new Promise((resolve) => {
       try {
         resolve(main());
       } catch (err) {
-        console.log(err);
-        throw 'erro';
+        throw new Error(err);
       }
     });
 
@@ -156,12 +141,11 @@ app.listen(process.env.APP_PORT, async () => {
     )
       .catch((err) => { throw new Error(err); });
 
-    const promiseKill = new Promise((resolve, reject) => {
+    const promiseKill = new Promise((resolve) => {
       try {
         resolve(killing());
       } catch (err) {
-        console.log(err);
-        throw 'erro';
+        throw new Error(err);
       }
     });
 
