@@ -141,19 +141,19 @@ app.listen(process.env.APP_PORT, async () => {
         console.log(err);
         throw new Error(err);
       });
-    const promiseMain = new Promise((resolve, reject) => {
-      try {
-        resolve(main());
-      } catch (err) {
-        console.log(err);
-        throw 'erro';
-      }
-    });
+    // const promiseMain = new Promise((resolve, reject) => {
+    //   try {
+    //     resolve(main());
+    //   } catch (err) {
+    //     console.log(err);
+    //     throw 'erro';
+    //   }
+    // });
 
-    await promiseMain.then(
-      () => console.log('promiseMain realizada'),
-    )
-      .catch((err) => { throw new Error(err); });
+    // await promiseMain.then(
+    //   () => console.log('promiseMain realizada'),
+    // )
+    //   .catch((err) => { throw new Error(err); });
 
     const promiseKill = new Promise((resolve, reject) => {
       try {
