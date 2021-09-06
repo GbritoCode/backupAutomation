@@ -8,7 +8,7 @@ const path = require('path');
 
 // const scriptPath = path.resolve(__dirname, process.env.BACKUP_SCRIPT )
 
-const bat = require.resolve(process.env.BACKUP_SCRIPT);
+const bat = require.resolve('/home/deploy/backupAutomation/backups/_backupScript.sh');
 // const bat1 = require.resolve('../backups/_backupScript.bat');
 
 const app = express();
