@@ -81,7 +81,7 @@ const main = async () => {
       FromEmailAddress: message.fromEmail,
       ReplyToAddresses: message.replyTo,
     };
-    console.log(params);
+    console.log(params.Content.Raw.Data.toString('utf-8'));
     return ses.sendEmail(params).promise();
   };
   try {
